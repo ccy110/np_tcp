@@ -29,8 +29,9 @@ handle_call(_Msg, _From, _State) ->
 handle_cast(_Msg, _State) ->
     {noreply, _State}.
     
-handle_info(init, _State) ->
-    {noreply, _State};
+handle_info(init, #{lisopt := LisOpt} = State) ->
+    % proplists:get_value()
+    {noreply, State};
 
 handle_info(_Msg, _State) ->
     {noreply, _State}.
