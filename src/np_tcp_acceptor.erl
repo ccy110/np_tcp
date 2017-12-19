@@ -39,11 +39,7 @@ handle_cast(loop_accept, State) ->
 
     case np_tcp_util:accept(ListenSocket) of
         {ok, ClientSocket} ->
-            case ProMod:start_link(Ref,ProModOpt,OtherOpt) of
-                {ok, Pid} ->
-                    np_tcp_util:controlling_process(ClientSocket, Pid);
-                _ -> error_to_do
-            end;
+            np_tcp_conn:start_protocol([ClientSocket,Ref,ProMod,ProModOpt,OtherOpt]);
         _ ->
             error_to_do
     end,
