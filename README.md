@@ -1,7 +1,7 @@
 np_tcp
 =====
 
-An OTP application
+(Work In Process) An simple tcp server for Erlang.
 
 Build
 -----
