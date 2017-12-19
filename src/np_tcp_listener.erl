@@ -11,15 +11,16 @@
 -define(SERVER, ?MODULE).
 -define(TABLE,?SERVER).
 
-start_link([Ref, LisOpt, ProMod, ProModOpt]) ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [Ref, LisOpt, ProMod, ProModOpt], []).
+start_link([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
+    gen_server:start_link(?SERVER, [Ref, LisOpt, ProMod, ProModOpt, OtherOpt], []).
 
-init([Ref, LisOpt, ProMod, ProModOpt]) ->
+init([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
     self() ! init,
     State = #{ref => Ref
-            , lisopt => LisOpt
-            , promod => ProMod
-            , promodpot => ProModOpt
+            , lis_opt => LisOpt
+            , pro_mod => ProMod
+            , pro_mod_opt => ProModOpt
+            , other_opt => OtherOpt
             },
     {ok, State}.
 
@@ -29,9 +30,27 @@ handle_call(_Msg, _From, _State) ->
 handle_cast(_Msg, _State) ->
     {noreply, _State}.
     
-handle_info(init, #{lisopt := LisOpt} = State) ->
-    % proplists:get_value()
-    {noreply, State};
+handle_info(init, State) ->
+    #{ref := Ref
+        , lis_opt := LisOpt
+        , pro_mod := ProMod
+        , pro_mod_opt := ProModOpt
+        , other_opt := OtherOpt
+    } = State,
+
+    ListenSocket = np_tcp_util:listen(LisOpt),
+
+    ChildSpec = [#{id => {np_tcp_acceptor_sup, Ref}
+                   , start => {np_tcp_acceptor_sup, start_link, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]}
+                   , restart => permanent
+                   , shutdown => infinity
+                   , type => supervisor
+                   , module => [np_tcp_acceptor_sup]
+                   }],
+
+    supervisor:start_child(np_tcp_sup, ChildSpec),
+
+    {noreply, State#{listen_socket => ListenSocket}};
 
 handle_info(_Msg, _State) ->
     {noreply, _State}.
