@@ -46,6 +46,13 @@ handle_info(init, State) ->
                    , shutdown => infinity
                    , type => supervisor
                    , module => [np_tcp_acceptor_sup]
+                   },
+                #{id => {np_tcp_client_sup, Ref}
+                   , start => {np_tcp_client_sup, start_link, [Ref, ProMod, ProModOpt, OtherOpt]}
+                   , restart => permanent
+                   , shutdown => infinity
+                   , type => supervisor
+                   , module => [np_tcp_client_sup]
                    }],
 
     supervisor:start_child(np_tcp_sup, ChildSpec),
