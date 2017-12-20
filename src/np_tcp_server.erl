@@ -25,7 +25,7 @@ handle_cast(_Msg, _State) ->
     {noreply, _State}.
     
 handle_info(init, _State) ->
-    ets:new(?TABLE, [set, named_table, {key,1}, public, {read_concurrency, true}]),
+    ets:new(?TABLE, [set, named_table, {keypos,1}, public, {read_concurrency, true}]),
     {noreply, _State};
 
 handle_info(_Msg, _State) ->
