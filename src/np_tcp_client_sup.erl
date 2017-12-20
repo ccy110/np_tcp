@@ -11,7 +11,7 @@ start_link([Ref, ProMod]) ->
 init([Ref, ProMod]) ->
     ChildSpec = #{  
                     id => {Ref,ProMod} ,
-                    start => {ProMod, start_link, []},
+                    start => {ProMod, start_link, [Ref]},
                     restart => permanent,
                     shutdown => brutal_kill,
                     type => worker,

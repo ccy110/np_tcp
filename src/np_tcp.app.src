@@ -1,7 +1,7 @@
 {application, np_tcp,
  [{description, "An OTP application"},
   {vsn, "0.1.0"},
-  {registered, []},
+  {registered, [np_tcp_sup, np_tcp_server]},
   {mod, { np_tcp_app, []}},
   {applications,
    [kernel,
