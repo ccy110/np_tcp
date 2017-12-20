@@ -33,7 +33,14 @@ init([]) ->
                 intensity => 1,
                 period => 5
                     },
-    ChildSpec = [],
+    ChildSpec = [#{
+                    id => np_tcp_server,
+                    start => {np_tcp_server,start_link,[]},
+                    restart => permanent,
+                    shutdown => infinity,
+                    type => worker,
+                    modules => [np_tcp_server]
+                }],
     {ok, { SupFlags, ChildSpec} }.
 
 %%====================================================================

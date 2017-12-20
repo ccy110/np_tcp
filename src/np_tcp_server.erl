@@ -2,7 +2,7 @@
 
 -behaviour(gen_server).
 
--export([start/0]).
+-export([start_link/0]).
 
 %% gen_server call_back function
 -export([init/1, handle_call/3, handle_cast/2
@@ -11,7 +11,7 @@
 -define(SERVER, ?MODULE).
 -define(TABLE,?SERVER).
 
-start() ->
+start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 init([]) ->
