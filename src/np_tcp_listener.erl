@@ -12,7 +12,8 @@
 -define(TABLE,?SERVER).
 
 start_link([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
-    gen_server:start_link(?SERVER, [Ref, LisOpt, ProMod, ProModOpt, OtherOpt], []).
+    gen_server:start_link({local,list_to_atom(lists:concat([ProMod,'_','listener']))}
+                        ,?SERVER, [Ref, LisOpt, ProMod, ProModOpt, OtherOpt], []).
 
 init([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
     self() ! init,

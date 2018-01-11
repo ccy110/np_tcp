@@ -27,7 +27,7 @@ acceptor_generator([AcceptorNum, Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]
                 , start => {np_tcp_acceptor, start_link, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]}
                 , restart => permanent
                 , shutdown => infinity
-                , type => supervisor
+                , type => worker
                 , module => [np_tcp_acceptor]
                 }
             end

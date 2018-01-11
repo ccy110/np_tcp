@@ -33,13 +33,14 @@ handle_cast(loop_accept, State) ->
     #{ref := Ref
         , listen_socket := ListenSocket
         , pro_mod_opt := ProModOpt
+        , other_opt := OtherOpt
         } = State,
 
     case np_tcp_util:accept(ListenSocket) of
         {ok, ClientSocket} ->
             {_, ClientSup, _, _} = lists:keyfind({np_tcp_client_sup, Ref}, 1,
                                         supervisor:which_children(np_tcp_sup)),
-            {ok, ConnPid} = supervisor:start_child(ClientSup, [ClientSocket,ProModOpt]),
+            {ok, ConnPid} = supervisor:start_child(ClientSup, [ClientSocket,ProModOpt,OtherOpt]),
             case ConnPid of
                 undefined -> error_to_do;
                 ConnPid when is_pid(ConnPid) ->
