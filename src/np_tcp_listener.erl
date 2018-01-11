@@ -39,7 +39,9 @@ handle_info(init, State) ->
         , other_opt := OtherOpt
     } = State,
 
-    ListenSocket = np_tcp_util:listen(LisOpt),
+    NewLisOpt = listen_option_pre_process(LisOpt),
+
+    ListenSocket = np_tcp_util:listen(NewLisOpt),
 
     ChildSpec = [#{id => {np_tcp_acceptor_sup, Ref}
                    , start => {np_tcp_acceptor_sup, start_link, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]}
@@ -68,3 +70,11 @@ teminate(_Reson, _State) ->
 
 code_change(_OldVsn, _State, _Extra) ->
     ok.
+
+listen_option_pre_process(LisOpt) ->
+    lists:map(
+            fun(X) ->
+                X
+            end
+            ,
+            LisOpt).
