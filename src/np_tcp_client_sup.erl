@@ -6,12 +6,13 @@
 -export([init/1]).
 
 start_link([Ref, ProMod]) ->
-    supervisor:start_link(?MODULE, [Ref, ProMod]).
+    supervisor:start_link({local,list_to_atom(lists:concat([ProMod,'_','np_tcp_client_sup']))}
+                        ,?MODULE, [Ref, ProMod]).
 
 init([Ref, ProMod]) ->
     ChildSpec = #{  
                     id => {Ref,ProMod} ,
-                    start => {ProMod, start_link, [Ref]},
+                    start => {ProMod, start_tcp, []},
                     restart => permanent,
                     shutdown => brutal_kill,
                     type => worker,

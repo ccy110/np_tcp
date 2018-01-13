@@ -11,8 +11,9 @@
 -define(SERVER, ?MODULE).
 -define(TABLE,?SERVER).
 
-start_link([Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]) ->
-    gen_server:start_link(?SERVER, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt], []).
+start_link([Ref, NumIndex, ListenSocket, ProMod, ProModOpt, OtherOpt]) ->
+    gen_server:start_link({local,list_to_atom(lists:concat([ProMod,'_','acceptor','_',NumIndex]))}
+            ,?SERVER, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt], []).
 
 init([Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]) ->
     State = #{ref => Ref
@@ -40,7 +41,7 @@ handle_cast(loop_accept, State) ->
         {ok, ClientSocket} ->
             {_, ClientSup, _, _} = lists:keyfind({np_tcp_client_sup, Ref}, 1,
                                         supervisor:which_children(np_tcp_sup)),
-            {ok, ConnPid} = supervisor:start_child(ClientSup, [ClientSocket,ProModOpt,OtherOpt]),
+            {ok, ConnPid} = supervisor:start_child(ClientSup, [Ref,ClientSocket,ProModOpt,OtherOpt]),
             case ConnPid of
                 undefined -> error_to_do;
                 ConnPid when is_pid(ConnPid) ->

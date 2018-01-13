@@ -12,7 +12,7 @@
 -define(TABLE,?SERVER).
 
 start_link([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
-    gen_server:start_link({local,list_to_atom(lists:concat([ProMod,'_','listener']))}
+    gen_server:start_link({local,list_to_atom(lists:concat([ProMod,'_','np_tcp_listener']))}
                         ,?SERVER, [Ref, LisOpt, ProMod, ProModOpt, OtherOpt], []).
 
 init([Ref, LisOpt, ProMod, ProModOpt, OtherOpt]) ->
@@ -41,7 +41,7 @@ handle_info(init, State) ->
 
     NewLisOpt = listen_option_pre_process(LisOpt),
 
-    ListenSocket = np_tcp_util:listen(NewLisOpt),
+    {ok,ListenSocket} = np_tcp_util:listen(NewLisOpt),
 
     ChildSpec = [#{id => {np_tcp_acceptor_sup, Ref}
                    , start => {np_tcp_acceptor_sup, start_link, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]}
@@ -72,9 +72,10 @@ code_change(_OldVsn, _State, _Extra) ->
     ok.
 
 listen_option_pre_process(LisOpt) ->
-    lists:map(
+    ReturnList = lists:map(
             fun(X) ->
                 X
             end
             ,
-            LisOpt).
+            LisOpt),
+    [bianry,{port,18080},{packet,0},{active,false}] ++ ReturnList .
