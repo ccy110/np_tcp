@@ -1,6 +1,6 @@
 -module(np_tcp_util).
 
--export([listen/1, accept/1, controlling_process/2, send/2, setopts/2]).
+-export([listen/1, accept/1, controlling_process/2, connect/3, send/2, setopts/2]).
 
 listen(LisOpt) ->
     % LisOpt should has {port,Port} option.
@@ -16,4 +16,7 @@ setopts(Socket, Opts) ->
 	inet:setopts(Socket, Opts).
 
 controlling_process(Socket, Pid) ->
-	gen_tcp:controlling_process(Socket, Pid).
+    gen_tcp:controlling_process(Socket, Pid).
+    
+connect(Address, Port, Options) ->
+    gen_tcp:connect(Address, Port, Options).

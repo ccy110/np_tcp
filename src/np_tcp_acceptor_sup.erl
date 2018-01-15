@@ -29,7 +29,7 @@ acceptor_generator([AcceptorNum, Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]
                 , restart => permanent
                 , shutdown => infinity
                 , type => worker
-                , module => [np_tcp_acceptor]
+                , modules => [np_tcp_acceptor]
                 }
             end
         ,lists:seq(1,AcceptorNum)

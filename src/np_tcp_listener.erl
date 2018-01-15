@@ -41,24 +41,27 @@ handle_info(init, State) ->
 
     NewLisOpt = listen_option_pre_process(LisOpt),
 
-    {ok,ListenSocket} = np_tcp_util:listen(NewLisOpt),
+    {ok, ListenSocket} = np_tcp_util:listen(NewLisOpt),
 
-    ChildSpec = [#{id => {np_tcp_acceptor_sup, Ref}
+    ChildSpecAcceptorSup = #{id => {np_tcp_acceptor_sup, Ref}
                    , start => {np_tcp_acceptor_sup, start_link, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]}
                    , restart => permanent
                    , shutdown => infinity
                    , type => supervisor
-                   , module => [np_tcp_acceptor_sup]
+                   , modules => [np_tcp_acceptor_sup]
                    },
-                #{id => {np_tcp_client_sup, Ref}
-                   , start => {np_tcp_client_sup, start_link, [Ref, ProMod, ProModOpt, OtherOpt]}
+
+    supervisor:start_child(np_tcp_sup, ChildSpecAcceptorSup),
+
+    ChildSpecClientSup = #{id => {np_tcp_client_sup, Ref}
+                   , start => {np_tcp_client_sup, start_link, [Ref, ProMod]}
                    , restart => permanent
                    , shutdown => infinity
                    , type => supervisor
-                   , module => [np_tcp_client_sup]
-                   }],
+                   , modules => [np_tcp_client_sup]
+                   },
 
-    supervisor:start_child(np_tcp_sup, ChildSpec),
+    supervisor:start_child(np_tcp_sup, ChildSpecClientSup),
 
     {noreply, State#{listen_socket => ListenSocket}};
 
@@ -78,4 +81,4 @@ listen_option_pre_process(LisOpt) ->
             end
             ,
             LisOpt),
-    [bianry,{port,18080},{packet,0},{active,false}] ++ ReturnList .
+    ReturnList .

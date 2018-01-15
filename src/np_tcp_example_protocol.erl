@@ -56,6 +56,7 @@ code_change(_OldVsn, _State, _Extra) ->
     ok.
 
 handle_tcp_data(Data) ->
+    io:format("~n receive: ~w ~n",[Data]),
     Data.
 
 tcp_send(ClientPID,Data) ->
