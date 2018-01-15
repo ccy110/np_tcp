@@ -2,10 +2,10 @@
 
 -behaviour(supervisor).
 
--export([start_link/1]).
+-export([start_link/5]).
 -export([init/1]).
 
-start_link([Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]) ->
+start_link(Ref, ListenSocket, ProMod, ProModOpt, OtherOpt) ->
     supervisor:start_link({local,list_to_atom(lists:concat([ProMod,'_','np_tcp_acceptor_sup']))}
                 ,?MODULE, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt]).
 

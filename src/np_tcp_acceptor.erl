@@ -2,7 +2,7 @@
 
 -behaviour(gen_server).
 
--export([start_link/1]).
+-export([start_link/6]).
 
 %% gen_server call_back function
 -export([init/1, handle_call/3, handle_cast/2
@@ -11,7 +11,7 @@
 -define(SERVER, ?MODULE).
 -define(TABLE,?SERVER).
 
-start_link([Ref, NumIndex, ListenSocket, ProMod, ProModOpt, OtherOpt]) ->
+start_link(Ref, NumIndex, ListenSocket, ProMod, ProModOpt, OtherOpt) ->
     gen_server:start_link({local,list_to_atom(lists:concat([ProMod,'_','acceptor','_',NumIndex]))}
             ,?SERVER, [Ref, ListenSocket, ProMod, ProModOpt, OtherOpt], []).
 
