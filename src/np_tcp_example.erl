@@ -16,7 +16,8 @@ spawn_conn(TestNum) when is_number(TestNum) andalso (TestNum > 0) ->
     lists:foreach( fun(MsgNum) ->
         spawn(fun() ->
             {ok,Socket} = np_tcp_util:connect({127,0,0,1},18080,[{active,true}]),
-            np_tcp_util:send(Socket,<<MsgNum>>)
+            np_tcp_util:send(Socket,<<MsgNum>>),
+            error_logger:info_msg("~n send: ~w ~n",[MsgNum])
         end)
     end,
     lists:seq(1,TestNum))

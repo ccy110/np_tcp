@@ -16,12 +16,12 @@ init([Ref, ProMod]) ->
         period => 5
     },
     ChildSpec = #{  
-                    id => {Ref,ProMod} ,
+                    id => {np_tcp_client,Ref,ProMod} ,
                     start => {ProMod, start_tcp, []},
                     restart => permanent,
                     shutdown => brutal_kill,
                     type => worker,
                     modules => [ProMod]
             },
-    {ok, { SupFlags, ChildSpec}}.
+    {ok, { SupFlags, [ChildSpec]}}.
 
