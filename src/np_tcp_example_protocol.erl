@@ -3,11 +3,14 @@
 -behaviour(gen_server).
 -behaviour(np_tcp_protocol).
 
-%% gen_server callback module
+%% gen_server callback function
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, teminate/2, code_change/3]).
 
-%% np_tcp_protocol module
+%% np_tcp_protocol callback function
 -export([start_tcp/4]).
+
+%% api
+-export([tcp_send/2]).
 
 -define(SERVER, ?MODULE).
 

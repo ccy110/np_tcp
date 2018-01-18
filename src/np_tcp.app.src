@@ -11,7 +11,8 @@
   {modules, ['np_tcp','np_tcp_util','np_tcp_sup'
             ,'np_tcp_server','np_tcp_protocol','np_tcp_listener'
             ,'np_tcp_conn','np_tcp_conn_sup','np_tcp_app'
-            ,'np_tcp_acceptor','np_tcp_acceptor_sup']},
+            ,'np_tcp_acceptor','np_tcp_acceptor_sup'
+            ,'np_tcp_example','np_tcp_example_protocol']},
 
   {maintainers, []},
   {licenses, ["MIT"]},

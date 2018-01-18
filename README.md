@@ -26,6 +26,15 @@
 - start client connect by 5 actors process  
 `2> np_tcp_example:spawn_conn(5).`  
 
+# Run by a new app
+use rebar3 create a new app project.  
+deploy rebar.config.  
+```erlang
+{deps, 
+    [ {np_tcp, {git, "https://github.com/Naupio/np_tcp.git", {tag, "master"}}}]
+}.
+```
+
 # Example code
 
 np_tcp_example.erl
